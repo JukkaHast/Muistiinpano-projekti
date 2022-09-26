@@ -1,0 +1,20 @@
+Muistiinpanosofta: 
+
+tarkoituksena tehdä muistiinpanopostauksia joihin tulee tageja joiden avulla sitten hakea:
+esimerkiksi ohjelmointi tagilla kaikki ohjelmointiin liittyvä tulisi listana
+postaukseen voi lisätä ainakin tekstiä, mahdollinen linkki johonkin(esim google docs) ja sitten tageja
+tekstin editointiin html ominaisuuksia?
+tiedoston lisäys, kuvan lisäys?
+
+tietokanta taulut:
+users: user_id,username,password
+sessions: session_id, session_token, user_id
+
+tags: tag_id, tag_name
+
+posts: post_id, textdata, date_created, date_modified, misc
+
+post_tags: post_id, tag_id
+
+
+npm install express better-sqlite3
