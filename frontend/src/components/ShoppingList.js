@@ -32,12 +32,12 @@ const ShoppingList = (props) => {
 	}
 
 	const removeItem = (id) => {
-		//props.removeItem(id);
+		props.removeItem(id);
 		changeMode("cancel");
 	}
 
 	const editItem = (item) => {
-		//props.editItem(item);
+		props.editItem(item);
 		changeMode("cancel");
 	}	
 	let items = props.list.map((item,index) => {

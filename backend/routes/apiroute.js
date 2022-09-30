@@ -1,6 +1,7 @@
 const {sequelize} = require("../db");
 const express = require("express");
 const noteModel = require("../models/Note");
+const { deleteNote } = require("../modules/deleteNote");
 
 const router = express.Router();
 //DATABASE
@@ -8,11 +9,7 @@ const router = express.Router();
 
 router.get("/note",function(req,res) {
 	//let query = {"userid":req.user}	
-	noteModel.findAll({where: {userId:req.headers.userid}}).then(items => {
-		//console.log(items);
-		//items = JSON.parse(JSON.stringify(items));
-		//console.log(items)
-		
+	noteModel.findAll({where: {userId:req.headers.userid}}).then(items => {		
 		return res.status(200).json(items);
 	}).catch((error) => {
 		console.error('Failed to retrieve data : ', error);
@@ -26,10 +23,10 @@ router.post("/note",function(req,res) {
 	if(!req.body.notetext){
 		return res.status(400).json({message:"Bad request"})
 	}
-	let item = new noteModel({		
+	/*let item = new noteModel({		
 		text:req.body.text,
 		userid:req.body.userid,		
-	})
+	})*/
 
 	try {
         sequelize.transaction(async function (transaction) {
@@ -37,7 +34,7 @@ router.post("/note",function(req,res) {
 			//await userModel.sync({transaction});
             const note = await noteModel.create({
                 text: req.body.notetext,
-				userId: req.body.userid
+				userId: req.body.userid,				
             }, { transaction });           
             
             return note;
@@ -51,38 +48,49 @@ router.post("/note",function(req,res) {
     }	
 })
 
-/*router.delete("/shopping/:id",function(req,res) {
-	itemModel.deleteOne({"_id":req.params.id,"user":req.session.user},function(err){
-		if(err) {
-			console.log("Failed to remove item. Reason.",err);
-			return res.status(500).json({message:"Internal server error"})
-		}
-		return res.status(200).json({message:"Success"});
-	})
+router.delete("/note/:id",function(req,res) {
+	/*try {
+		sequelize.transaction(async function(transaction){
+			const noterem = await noteModel.destroy({
+				where: {id:req.params.id, userId:req.headers.userid}
+			}, {transaction});
+			return noterem;
+		});
+		console.log("successfully deleted");
+		return res.status(201).json({message:"Deleted"})
+	} catch (error) {
+		console.log("Failed to delete note. Reason",error);
+		return res.status(500).json({message:"Internal server error"})
+	}*/
+	deleteNote(req,res);
 })
 
-router.put("/shopping/:id",function(req,res) {
+router.put("/note/:id",function(req,res) {
 	if(!req.body){
 		return res.status(400).json({message:"Bad request"});
 	}
-	if(!req.body.type){
+	if(!req.body.notetext){
 		return res.status(400).json({message:"Bad request"})
 	}
-	let item = {		
-		type:req.body.type,
-		count:req.body.count,
-		price:req.body.price,
-		user:req.session.user
-	}
-	itemModel.replaceOne({"_id":req.params.id,"user":req.session.user},
-	item, function(err) {
-		if(err) {
-			console.log("Failed to update item. Reason",err);
-			return res.status(500).json({message:"Internal server error"});
-		}
-		return res.status(200).json({message:"Success"});
-	})
-})*/
+
+	(async () => {
+		try {
+			await sequelize.transaction(async function(transaction) {
+				const noteupd = await noteModel.update({text:req.body.notetext},
+					{ where: {
+						id:req.params.id,userId:req.headers.userid}
+				}, {transaction});
+				return noteupd;
+			});
+			console.log("successfully edited");
+			return res.status(201).json({message:"Edit performed succesfully"});
+		} catch (error) {
+			console.log("Failed to edit note. Reason",error);
+			return res.status(500).json({message:"Internal server error"})
+		}	
+	  })();
+	
+})
 
 module.exports = router;
 

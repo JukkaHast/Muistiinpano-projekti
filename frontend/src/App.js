@@ -60,7 +60,13 @@ function App() {
                 list:data
               })
             }
-            return;          
+            return;
+          case "removeitem":
+            getList();
+            return;
+          case "edititem":
+            getList();
+            return;      
           default:
             return;
         }      
@@ -71,7 +77,13 @@ function App() {
 						return;     
           case "getlist":
             console.log("server responded with a status", response.status)
-            return;          
+            return;
+          case "removeitem":
+            console.log("Removing note failed. Server responded with "+response.status+" "+response.statusText);
+            return;
+          case "edititem":
+            console.log("Updating note failed. Server responded with "+response.status+" "+response.statusText);
+            return;
           default:
             return;
         }
@@ -104,13 +116,36 @@ function App() {
 			action:"additem"
 		})
 	}
+
+  const removeItem = (id) => {
+    setUrlRequest({
+			url:"/api/note/"+id,
+			request:{
+				method:"DELETE",
+				headers:{"Content-Type":"application/json", userid:1}
+			},
+			action:"removeitem"
+		})
+  }
+
+  const editItem = (item) => {
+    setUrlRequest({
+			url:"/api/note/"+item.id,
+			request:{
+				method:"PUT",
+				headers:{"Content-Type":"application/json", userid:1},
+        body:JSON.stringify(item)
+			},
+			action:"edititem"
+		})
+  } 
   let messageArea = <h4> </h4>
 	if(state.loading) {
 		messageArea = <h4>Loading ...</h4>
   }
 
   let tempRender = <Routes>
-						<Route exact path="/" element={<ShoppingList list={state.list}/>}/>
+						<Route exact path="/" element={<ShoppingList editItem={editItem} removeItem={removeItem} list={state.list}/>}/>
 						<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
             
 						
