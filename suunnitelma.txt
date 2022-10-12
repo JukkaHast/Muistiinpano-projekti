@@ -12,9 +12,13 @@ sessions: session_id, session_token, user_id
 
 tags: tag_id, tag_name
 
-posts: post_id, textdata, date_created, date_modified, misc
+posts: post_id, otsikko, textdata, date_created, date_modified, misc, user_id
 
 post_tags: post_id, tag_id
 
+Mitä tietoja hakea: kaikki tagit, kaikki notet, notet joilla tietty tagi, yhden noten kaikki tagit,
 
-npm install express better-sqlite3
+ohjelman etusivulla näkymä olisi, navigointi ylhäällä, sivupalkki jossa lista tageista joilla voi hakea, keskellä vakiona uuden muistiinpanon lisäys
+react komponentit: 	notesComponent: näytä teksti, ajat ja tagit, lisää, muuta, poista (/note)
+					tagsComponent: näytä lista tageista, lisäys poisto,
+npm install express sequelize

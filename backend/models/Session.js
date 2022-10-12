@@ -1,17 +1,21 @@
 const { sequelize } = require('../db');
 const {DataTypes} = require('sequelize');
 
-const User = sequelize.define('user', {
+const Session = sequelize.define('session', {
 	// Model attributes are defined here
-	userName: {
-	  type: DataTypes.STRING,
-	  allowNull: false,
+	userid: {
+	  type: DataTypes.NUMBER,	  
 	  unique:true
 	},
-	password: {
+	token: {
 	  type: DataTypes.STRING,
+	  unique:true,
 	  allowNull:false
 	  // allowNull defaults to true
+	},
+	ttl: {
+		type:DataTypes.NUMBER,
+		allowNull:false
 	}
 }, {
 	// Other model options go here
@@ -23,6 +27,5 @@ const User = sequelize.define('user', {
 }).finally(() => {
 	
 });*/
-User.sync();
-module.exports = sequelize.model("user", User);
-
+Session.sync();
+module.exports = sequelize.model("session", Session);
