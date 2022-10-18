@@ -16,6 +16,8 @@ const Tag = sequelize.define('tag', {
 	}
 }, {
 	// Other model options go here
+	timestamps:false
+	
 });
 /*sequelize.sync().then(() => {
 	console.log('Book table created successfully!');	

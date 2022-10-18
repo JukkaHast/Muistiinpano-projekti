@@ -5,6 +5,8 @@ const noteModel = require("../models/Note");
 
 const router = express.Router();
 
+
+// Muistiinpano
 router.get("/note",function(req,res) {
 	//let query = {"userid":req.user}	
 	getNotes(req,res);	
@@ -19,6 +21,7 @@ router.delete("/note/:id",function(req,res) {
 })
 
 router.put("/note/:id",function(req,res) {
+	editNote(req,res);
 	/*if(!req.body){
 		return res.status(400).json({message:"Bad request"});
 	}
@@ -41,9 +44,11 @@ router.put("/note/:id",function(req,res) {
 			console.log("Failed to edit note. Reason",error);
 			return res.status(500).json({message:"Internal server error"})
 		}	
-	  })();*/
-	  editNote(req,res);
+	  })();*/	  
 })
+// Tagit
+
+// 
 
 module.exports = router;
 

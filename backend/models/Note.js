@@ -4,16 +4,18 @@ const User = require('./User');
 
 const Note = sequelize.define('note', {
 	// Model attributes are defined here
+	otsikko: {
+		type: DataTypes.STRING
+	},
 	text: {
-	  type: DataTypes.TEXT('long'),
+	  	type: DataTypes.TEXT('long'),
 	},
 	userId: {
 		type: DataTypes.INTEGER,
 		allowNull:false,
 		references: {
-		  model: User, 
-		  key: 'id'
-		  
+		  	model: User,
+		  	key: 'id'		  
 		}
 	  }
 }, {
