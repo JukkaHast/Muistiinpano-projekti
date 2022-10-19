@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const ShoppingForm = (props) => {
-	const [state,setState] = useState({
+	const [state,setState] = useState({		
 		notetext:"",
 		userid:1
 		
@@ -23,8 +23,7 @@ const ShoppingForm = (props) => {
 		}
 		props.addItem(item);
 		setState({
-			notetext:"",
-			userid:1
+			notetext:""			
 		})
 	}
 	return (

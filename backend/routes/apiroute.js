@@ -1,6 +1,7 @@
 const express = require("express");
 const { deleteNote, addNote, editNote, getNotes } = require("../modules/NoteModule");
 const noteModel = require("../models/Note");
+const { getTags } = require("../modules/TagModule");
 
 
 const router = express.Router();
@@ -14,6 +15,7 @@ router.get("/note",function(req,res) {
 
 router.post("/note",function(req,res) {
 	addNote(req,res);
+	//console.log(req.body);
 })
 
 router.delete("/note/:id",function(req,res) {	
@@ -47,7 +49,9 @@ router.put("/note/:id",function(req,res) {
 	  })();*/	  
 })
 // Tagit
-
+router.get("/tag",function(req,res) {	
+	getTags(req,res);	
+});
 // 
 
 module.exports = router;

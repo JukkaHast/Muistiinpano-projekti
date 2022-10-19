@@ -6,6 +6,7 @@ async function getTags(req,res){
 		return res.status(200).json(tags);
 	}).catch((error) => {
 		console.error('Failed to retrieve data : ', error);
+		return res.status(500).json({message:"Internal server error"});
 	});
 }
 

@@ -75,6 +75,33 @@ isUserLogged = (req,res,next) => {
 	})
 }
 
+app.post("/addtag", async function(req,res) {
+	if(!req.body){
+		return res.status(400).json({message:"Bad request"});
+	}
+	if(!req.body.tagname){
+		return res.status(400).json({message:"Bad request"});
+	}	
+
+	try {
+        const result = await sequelize.transaction(async function (t) {
+            // chain all your queries here. make sure you return them.
+			//await userModel.sync({transaction});
+            const tag = await tagModel.create({
+                tagName: req.body.tagname								
+            }, { transaction: t });           
+            
+			console.log(tag.id);
+            return tag;
+        });
+		console.log(result);
+        console.log('success');
+		return res.status(201).json({message:"Created"});
+    } catch (error) {
+		console.log("Failed to create item. Reason",error);
+		return res.status(500).json({message:"Internal server error"});
+    }	
+})
 
 app.post("/register", function(req,res) {
 	if(!req.body) {

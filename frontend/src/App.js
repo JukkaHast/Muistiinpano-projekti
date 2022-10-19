@@ -6,12 +6,14 @@ import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
 import Test from './components/Test';
 import LoginPage from './components/LoginPage';
+import AddNoteForm from './components/AddNoteForm';
 
 
 function App() {
 
   const [state,setState] = useState({
 		list:[],
+		taglist:[],
 		token:"",
 		isLogged:false,
 		loading:false,
@@ -48,6 +50,7 @@ function App() {
 	const cleanState = () => {
 		let state = {
 			list:[],
+			taglist:[],
 			isLogged:false,
 			token:"",
 			loading:false,
@@ -68,7 +71,9 @@ function App() {
 			let state = JSON.parse(sessionStorage.getItem("state"));
 			setState(state);
 			if(state.isLogged) {
-				getList(state.token);
+				getNotes(state.token);
+				getTags(state.token);
+				console.log("testtest")
 			}
 		}
 	},[])
@@ -85,27 +90,40 @@ function App() {
       setLoading(false);
       if(response.ok) {
         switch(urlRequest.action) {      
-			case "additem":
-						getList();
-						return;    
-			case "getlist":
-			let data = await response.json();			       
-			if(data) {
-				setState((state) => {
-					let tempState = {
-						...state,
-						list:data
-					}
-					saveToStorage(tempState);
-					return tempState;
-				})
-			}
-			return;
-			case "removeitem":
-				getList();
+			case "addnote":
+				getNotes();
+				return;    
+			case "getnotes":
+				let data = await response.json();			       
+				if(data) {
+					setState((state) => {
+						let tempState = {
+							...state,
+							list:data
+						}
+						saveToStorage(tempState);
+						return tempState;
+					})
+				}
 				return;
-			case "edititem":
-				getList();
+			case "gettags":
+				let tagdata = await response.json();			       
+				if(tagdata) {
+					setState((state) => {
+						let tempState = {
+							...state,
+							taglist:tagdata
+						}
+						saveToStorage(tempState);
+						return tempState;
+					})
+				}
+				return;
+			case "removenote":
+				getNotes();
+				return;
+			case "editnote":
+				getNotes();
 				return;
 			case "register":
 				setError("You have succesfully registered!");
@@ -122,7 +140,7 @@ function App() {
 						saveToStorage(tempState);
 						return tempState;
 					});
-					getList(loginData.token);
+					getNotes(loginData.token);
 				}
 				return;
 			case "logout":
@@ -133,38 +151,41 @@ function App() {
         }      
       } else {
         if(response.status === 403) {
-					cleanState();
-					setError("Your session has expired. Logging you out!");
-					return;
-				}
+			cleanState();
+			setError("Your session has expired. Logging you out!");
+			return;
+		}
         switch(urlRequest.action) {     
-          case "additem":
-						console.log("Adding new item failed. Server responded with "+response.status+" "+response.statusText);
-						return;     
-          case "getlist":
-            console.log("server responded with a status", response.status)
-            return;
-          case "removeitem":
-            console.log("Removing note failed. Server responded with "+response.status+" "+response.statusText);
-            return;
-          case "edititem":
-            console.log("Updating note failed. Server responded with "+response.status+" "+response.statusText);
-            return;
-          case "register":
-						if(response.status === 409) {
-							setError("Username is already in use");
-						} else {
-							setError("Registering new user failed. Server responded with "+response.status+" "+response.statusText);
-						}
-						return;
-					case "login":
-						setError("Login failed. Server responded with "+response.status+" "+response.statusText);
-						return;
-					case "logout":
-						cleanState();
-						return;          
-          default:
-            return;
+			case "addnote":
+				console.log("Adding new item failed. Server responded with "+response.status+" "+response.statusText);
+				return;     
+			case "getnotes":
+				setError("Fetching note list failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "gettags":
+				setError("Fetching tag list failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "removenote":
+				console.log("Removing note failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "editnote":
+				console.log("Updating note failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "register":
+				if(response.status === 409) {
+					setError("Username is already in use");
+				} else {
+					setError("Registering new user failed. Server responded with "+response.status+" "+response.statusText);
+				}
+				return;
+			case "login":
+				setError("Login failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "logout":
+				cleanState();
+				return;          
+			default:
+            	return;
         }
       }
     }
@@ -211,7 +232,7 @@ function App() {
 	}
 
   // REST
-  const getList = (token) => {
+  const getNotes = (token) => {
 		let tempToken = state.token;
 		if(token) {
 			tempToken = token
@@ -223,44 +244,58 @@ function App() {
 				headers:{"Content-Type":"application/json",
 						token:tempToken}       
 			},
-			action:"getlist"
+			action:"getnotes"
 		})
 	}
 
-  const addItem = (item) => {
+  const addNote = (item) => {
 		setUrlRequest({
 			url:"/api/note",
 			request:{
 				method:"POST",
-				headers:{"Content-Type":"application/json"},
+				headers:{"Content-Type":"application/json",token:state.token},
 				body:JSON.stringify(item)
 			},
-			action:"additem"
+			action:"addnote"
 		})
 	}
 
-  const removeItem = (id) => {
+  const removeNote = (id) => {
     setUrlRequest({
 			url:"/api/note/"+id,
 			request:{
 				method:"DELETE",
 				headers:{"Content-Type":"application/json", userid:1}
 			},
-			action:"removeitem"
+			action:"removenote"
 		})
   }
 
-  const editItem = (item) => {
+  const editNote = (item) => {
     setUrlRequest({
 			url:"/api/note/"+item.id,
 			request:{
 				method:"PUT",
 				headers:{"Content-Type":"application/json", userid:1},
-        body:JSON.stringify(item)
+        		body:JSON.stringify(item)
 			},
-			action:"edititem"
+			action:"editnote"
 		})
-  } 
+  }
+  const getTags = (token) => {
+	let tempToken = state.token;
+		if(token) {
+			tempToken = token
+		}
+	setUrlRequest({
+		url:"/api/tag",
+		request:{
+			method:"GET",
+			headers:{"Content-Type":"application/json", token:tempToken}
+		},
+		action:"gettags"
+	})
+  }
   let messageArea = <h4> </h4>
 	if(state.loading) {
 		messageArea = <h4>Loading ...</h4>
@@ -275,23 +310,21 @@ function App() {
 					 </Routes>
   if(state.isLogged) {
     tempRender = <Routes>
-						<Route exact path="/" element={<ShoppingList editItem={editItem} removeItem={removeItem} list={state.list}/>}/>
-						<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
-            <Route path="*" element={<Navigate to="/"/>}/>						
+						<Route path="/" element={<AddNoteForm addNote={addNote} taglist={state.taglist}></AddNoteForm>}></Route>						
+            			<Route path="*" element={<Navigate to="/"/>}/>				
 					</Routes>
   }
   
   return (    
     <div className="App">
     
-      <Navbar isLogged={state.isLogged} logout={logout}/>
+      
       {messageArea}
       <hr/>
       {tempRender}
-      
-
     </div>
   );
 }
 
 export default App;
+// <Navbar isLogged={state.isLogged} logout={logout}/>
