@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Test from './components/Test';
 import LoginPage from './components/LoginPage';
 import AddNoteForm from './components/AddNoteForm';
+import Tags from './components/Tags';
 
 
 function App() {
@@ -310,15 +311,16 @@ function App() {
 					 </Routes>
   if(state.isLogged) {
     tempRender = <Routes>
-						<Route path="/" element={<AddNoteForm addNote={addNote} taglist={state.taglist}></AddNoteForm>}></Route>						
+						<Route path="/" element={<div><Tags taglist={state.taglist}></Tags><AddNoteForm addNote={addNote} taglist={state.taglist}></AddNoteForm></div>}></Route>
+									
             			<Route path="*" element={<Navigate to="/"/>}/>				
 					</Routes>
   }
-  
+  // https://dev.to/tywenk/how-to-use-nested-routes-in-react-router-6-4jhd
   return (    
     <div className="App">
-    
-      
+   
+	
       {messageArea}
       <hr/>
       {tempRender}

@@ -46,9 +46,9 @@ const AddNoteForm = (props) => {
 		}
 		props.addNote(item);
 		setState({
+			...state,
 			notetitle:"",
-			notetext:"",
-			taglist:[]		
+			notetext:""		
 		})
 	}
 	let tagboxes = props.taglist.map((tag) => {
@@ -75,6 +75,7 @@ const AddNoteForm = (props) => {
 						id="notetitle"						
 						value={state.notetitle}
 						onChange={onChange}/>
+				<br/>
 				<label htmlFor="notetext">Add Note:</label>
 				<br/>
 				<textarea id="notetext" name="notetext" rows="12" cols="50" onChange={onChange} value={state.notetext}></textarea>
