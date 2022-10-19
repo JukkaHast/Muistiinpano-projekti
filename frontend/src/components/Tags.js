@@ -24,5 +24,5 @@ const Tags = (props) => {
 		
 	)
 }
-
+//https://www.freecodecamp.org/news/pass-data-between-components-in-react/
 export default Tags;
