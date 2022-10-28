@@ -8,6 +8,7 @@ import Test from './components/Test';
 import LoginPage from './components/LoginPage';
 import AddNoteForm from './components/AddNoteForm';
 import Tags from './components/Tags';
+import ShowNotes from './components/ShowNotes';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
   const [state,setState] = useState({
 		list:[],
 		taglist:[],
+		tagnoteidlist:[],
 		token:"",
 		isLogged:false,
 		loading:false,
@@ -52,6 +54,7 @@ function App() {
 		let state = {
 			list:[],
 			taglist:[],
+			tagnoteidlist:[],
 			isLogged:false,
 			token:"",
 			loading:false,
@@ -71,15 +74,32 @@ function App() {
 		if(sessionStorage.getItem("state")) {
 			let state = JSON.parse(sessionStorage.getItem("state"));
 			setState(state);
+			
+				console.log("testtest")
+			
+		}
+	},[])	
+	/*useEffect(() => {
+		const getthings = async () => {
 			if(state.isLogged) {
 				getNotes(state.token);
 				getTags(state.token);
-				console.log("testtest")
-			}
+				getTagNoteIds(state.token);
 		}
-	},[])
-  
-
+	}
+	getthings();
+ 	},[])*/
+	useEffect(() => {
+		if(state.isLogged){
+			getTagNoteIds(state.token);
+		}
+		
+	},[state.list])
+	useEffect(() => {
+		if(state.isLogged){
+			getTags(state.token);
+		}		
+	},[state.tagnoteidlist])
   useEffect(() => {
 
     const fetchData = async () => {
@@ -92,7 +112,9 @@ function App() {
       if(response.ok) {
         switch(urlRequest.action) {      
 			case "addnote":
-				getNotes();
+				getNotes(state.token);
+				
+				
 				return;    
 			case "getnotes":
 				let data = await response.json();			       
@@ -105,7 +127,10 @@ function App() {
 						saveToStorage(tempState);
 						return tempState;
 					})
+					//getTagNoteIds();
+					//getTags();
 				}
+			
 				return;
 			case "gettags":
 				let tagdata = await response.json();			       
@@ -114,6 +139,19 @@ function App() {
 						let tempState = {
 							...state,
 							taglist:tagdata
+						}
+						saveToStorage(tempState);
+						return tempState;
+					})
+				}
+				return;
+			case "gettagnoteids":
+				let tagnoteids = await response.json();			       
+				if(tagnoteids) {
+					setState((state) => {
+						let tempState = {
+							...state,
+							tagnoteidlist:tagnoteids
 						}
 						saveToStorage(tempState);
 						return tempState;
@@ -164,6 +202,9 @@ function App() {
 				setError("Fetching note list failed. Server responded with "+response.status+" "+response.statusText);
 				return;
 			case "gettags":
+				setError("Fetching tag list failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "gettagnoteids":
 				setError("Fetching tag list failed. Server responded with "+response.status+" "+response.statusText);
 				return;
 			case "removenote":
@@ -297,6 +338,20 @@ function App() {
 		action:"gettags"
 	})
   }
+  const getTagNoteIds = (token) => {
+	let tempToken = state.token;
+		if(token) {
+			tempToken = token
+		}
+	setUrlRequest({
+		url:"/api/notetags",
+		request:{
+			method:"GET",
+			headers:{"Content-Type":"application/json", token:tempToken}
+		},
+		action:"gettagnoteids"
+	})
+  }
   let messageArea = <h4> </h4>
 	if(state.loading) {
 		messageArea = <h4>Loading ...</h4>
@@ -311,7 +366,7 @@ function App() {
 					 </Routes>
   if(state.isLogged) {
     tempRender = <Routes>
-						<Route path="/" element={<div><Tags taglist={state.taglist}></Tags><AddNoteForm addNote={addNote} taglist={state.taglist}></AddNoteForm></div>}></Route>
+						<Route path="/" element={<div><ShowNotes list={state.list} taglist={state.taglist} tagnoteidlist={state.tagnoteidlist} ></ShowNotes><AddNoteForm getTagNoteIds={getTagNoteIds} getNotes={getNotes} addNote={addNote} taglist={state.taglist}></AddNoteForm></div>}></Route>
 									
             			<Route path="*" element={<Navigate to="/"/>}/>				
 					</Routes>

@@ -1,5 +1,5 @@
 const express = require("express");
-const { deleteNote, addNote, editNote, getNotes } = require("../modules/NoteModule");
+const { deleteNote, addNote, editNote, getNotes, getTagNoteIds } = require("../modules/NoteModule");
 const noteModel = require("../models/Note");
 const { getTags } = require("../modules/TagModule");
 
@@ -11,6 +11,10 @@ const router = express.Router();
 router.get("/note",function(req,res) {
 	//let query = {"userid":req.user}	
 	getNotes(req,res);	
+});
+router.get("/notetags",function(req,res) {
+	//let query = {"userid":req.user}	
+	getTagNoteIds(req,res);	
 });
 
 router.post("/note",function(req,res) {

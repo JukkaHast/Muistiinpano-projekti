@@ -50,6 +50,8 @@ const AddNoteForm = (props) => {
 			notetitle:"",
 			notetext:""		
 		})
+		//props.getTagNoteIds();
+		//props.getNotes();
 	}
 	let tagboxes = props.taglist.map((tag) => {
 		return <div key={tag.id}>

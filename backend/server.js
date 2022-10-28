@@ -36,9 +36,10 @@ isUserLogged = (req,res,next) => {
 		let now = Date.now();
 		if(now > session.ttl){
 			sessionModel.destroy({where: {id:session.id}}).then(items => {
-				return res.status(201).json({message:"Deleted "+items+" rows"})
+				//return res.status(201).json({message:"Deleted "+items+" rows"})
 			}).catch((err) => {
 				console.log("Failed to remove session. Reason",err);
+				//return res.status(403).json({message:"Forbidden"});
 			})
 			//sessionModel.deleteOne({"_id":session._id},function(err){
 			//	console.log("Failed to remove session. Reason",err);				

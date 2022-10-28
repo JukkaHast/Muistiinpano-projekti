@@ -10,6 +10,14 @@ async function getNotes(req,res){
 		return res.status(500).json({message:"Internal server error"})
 	});
 }
+async function getTagNoteIds(req,res){
+	noteTagModel.findAll().then(notes => {
+		return res.status(200).json(notes);
+	}).catch((error) => {
+		console.error('Failed to retrieve data : ', error);
+		return res.status(500).json({message:"Internal server error"})
+	});
+}
 
 async function deleteNote(req, res){
 	try {
@@ -108,6 +116,6 @@ async function editNote(req,res){
 	}	
 }
 
-module.exports = {deleteNote, addNote, editNote, getNotes};
+module.exports = {deleteNote, addNote, editNote, getNotes, getTagNoteIds};
 
 
