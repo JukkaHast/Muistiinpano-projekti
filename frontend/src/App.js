@@ -2,13 +2,14 @@ import {useState,useEffect} from 'react';
 import './App.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import ShoppingForm from './components/ShoppingForm';
-import ShoppingList from './components/ShoppingList';
+import ShoppingList from './components/TagList';
 import Navbar from './components/Navbar';
 import Test from './components/Test';
 import LoginPage from './components/LoginPage';
 import AddNoteForm from './components/AddNoteForm';
 import Tags from './components/Tags';
 import ShowNotes from './components/ShowNotes';
+import TagList from './components/TagList';
 
 
 function App() {
@@ -115,7 +116,10 @@ function App() {
 				getNotes(state.token);
 				
 				
-				return;    
+				return;
+			case "addtag":
+				getTags(state.token);				
+				return;
 			case "getnotes":
 				let data = await response.json();			       
 				if(data) {
@@ -159,10 +163,13 @@ function App() {
 				}
 				return;
 			case "removenote":
-				getNotes();
+				getNotes(state.token);
+				return;
+			case "removetag":
+				getTags(state.token);
 				return;
 			case "editnote":
-				getNotes();
+				getNotes(state.token);
 				return;
 			case "register":
 				setError("You have succesfully registered!");
@@ -199,6 +206,12 @@ function App() {
 				console.log("Adding new item failed. Server responded with "+response.status+" "+response.statusText);
 				return;     
 			case "getnotes":
+				setError("Fetching note list failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "addtag":
+				setError("Fetching note list failed. Server responded with "+response.status+" "+response.statusText);
+				return;
+			case "removetag":
 				setError("Fetching note list failed. Server responded with "+response.status+" "+response.statusText);
 				return;
 			case "gettags":
@@ -307,7 +320,7 @@ function App() {
 			url:"/api/note/"+id,
 			request:{
 				method:"DELETE",
-				headers:{"Content-Type":"application/json", userid:1}
+				headers:{"Content-Type":"application/json", token:state.token}
 			},
 			action:"removenote"
 		})
@@ -318,12 +331,36 @@ function App() {
 			url:"/api/note/"+item.id,
 			request:{
 				method:"PUT",
-				headers:{"Content-Type":"application/json", userid:1},
+				headers:{"Content-Type":"application/json", token:state.token},
         		body:JSON.stringify(item)
 			},
 			action:"editnote"
 		})
   }
+
+  const addTag = (item) => {
+		setUrlRequest({
+			url:"/api/tag",
+			request:{
+				method:"POST",
+				headers:{"Content-Type":"application/json",token:state.token},
+				body:JSON.stringify(item)
+			},
+			action:"addtag"
+		})
+	}
+
+  const removeTag = (id) => {
+    setUrlRequest({
+			url:"/api/tag/"+id,
+			request:{
+				method:"DELETE",
+				headers:{"Content-Type":"application/json", token:state.token}
+			},
+			action:"removetag"
+		})
+  }
+
   const getTags = (token) => {
 	let tempToken = state.token;
 		if(token) {
@@ -366,19 +403,20 @@ function App() {
 					 </Routes>
   if(state.isLogged) {
     tempRender = <Routes>
-						<Route path="/" element={<div><ShowNotes list={state.list} taglist={state.taglist} tagnoteidlist={state.tagnoteidlist} ></ShowNotes><AddNoteForm getTagNoteIds={getTagNoteIds} getNotes={getNotes} addNote={addNote} taglist={state.taglist}></AddNoteForm></div>}></Route>
-									
+						<Route path="/" element={<div><ShowNotes list={state.list} taglist={state.taglist} tagnoteidlist={state.tagnoteidlist} removeNote={removeNote} editNote={editNote} ></ShowNotes></div>}></Route>
+						<Route path="/addnote/" element={<AddNoteForm getTagNoteIds={getTagNoteIds} getNotes={getNotes} addNote={addNote} taglist={state.taglist}></AddNoteForm>}></Route>
+						<Route path="/tags/" element={<TagList removeTag={removeTag} addTag={addTag} list={state.taglist}></TagList>}></Route>
             			<Route path="*" element={<Navigate to="/"/>}/>				
 					</Routes>
   }
   // https://dev.to/tywenk/how-to-use-nested-routes-in-react-router-6-4jhd
   return (    
     <div className="App">
-   
+		<Navbar isLogged={state.isLogged} logout={logout}/>	
 	
-      {messageArea}
-      <hr/>
-      {tempRender}
+		{messageArea}
+		<hr/>
+		{tempRender}
     </div>
   );
 }

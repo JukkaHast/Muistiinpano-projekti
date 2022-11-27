@@ -14,7 +14,7 @@ async function addTag(req,res) {
 	if(!req.body){
 		return res.status(400).json({message:"Bad request"});
 	}
-	if(!req.body.tagname){
+	if(!req.body.tagName){
 		return res.status(400).json({message:"Bad request"});
 	}	
 
@@ -22,8 +22,8 @@ async function addTag(req,res) {
         await sequelize.transaction(async function (transaction) {
             // chain all your queries here. make sure you return them.
 			//await userModel.sync({transaction});
-            const tag = await noteModel.create({
-                tagName: req.body.tagname								
+            const tag = await tagModel.create({
+                tagName: req.body.tagName								
             }, { transaction });           
             
             return tag;
@@ -40,7 +40,7 @@ async function addTag(req,res) {
 async function deleteTag(req, res){
 	try {
 		await sequelize.transaction(async function(transaction){
-			const tagrem = await noteModel.destroy({
+			const tagrem = await tagModel.destroy({
 				where: {id:req.params.id}
 			}, {transaction});
 			return tagrem;

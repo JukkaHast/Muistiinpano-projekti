@@ -1,13 +1,12 @@
-const RemoveRow = (props) => {
+const RemoveTag = (props) => {
 
 	return(
 		<div>
-			<p>{props.note.otsikko}</p>
-			<p>{props.note.text}</p>
+			<p>{props.tag.tagName}</p>			
 			<button className="btn btn-danger"
 				onClick={ () => props.changeMode("cancel")}>Cancel</button>
 			<button className="btn btn-secondary"
-				onClick={() => props.removeItem(props.note.id)}>Remove</button>			
+				onClick={() => props.removeTag(props.tag.id)}>Remove</button>			
 		</div>
 		/*<tr>
 			<td>{props.item.text}</td>
@@ -20,4 +19,4 @@ const RemoveRow = (props) => {
 	)
 }
 
-export default RemoveRow;
+export default RemoveTag;

@@ -2,7 +2,8 @@ import { useState } from "react";
 
 const EditRow = (props) => {
 	const [state,setState] = useState({
-		notetext:props.item.text		
+		notetext:props.note.text,
+		otsikko:props.note.otsikko
 	})
 
 	const onChange = (event) => {
@@ -17,13 +18,31 @@ const EditRow = (props) => {
 	const editItem = () => {
 		let item = {
 			...state,
-			id:props.item.id
+			id:props.note.id
 		}
 		props.editItem(item);
 	}
 
 	return(
-		<tr>
+		<div>
+			<p><input type="text"
+						name="otsikko"
+						id="otsikko"
+						onChange={onChange}
+						className="form-control"
+						value={state.otsikko}/></p>
+			<p><input type="text"
+						name="notetext"
+						id="notetext"
+						onChange={onChange}
+						className="form-control"
+						value={state.notetext}/></p>
+			<button className="btn btn-danger"
+				onClick={editItem}>Save</button>
+			<button className="btn btn-secondary"
+				onClick={() => props.changeMode("cancel")}>Cancel</button>			
+		</div>
+		/*<tr>
 			<td><input type="text"
 						name="notetext"
 						id="notetext"
@@ -35,7 +54,7 @@ const EditRow = (props) => {
 			onClick={editItem}>Save</button></td>
 			<td><button className="btn btn-danger"
 			onClick={() => props.changeMode("cancel")}>Cancel</button></td>
-		</tr>
+		</tr>*/
 	)
 }
 
