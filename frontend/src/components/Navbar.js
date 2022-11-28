@@ -5,6 +5,9 @@ const Navbar = (props) => {
 	if(props.isLogged){
 		links = <ul className="navbar-nav">
 					<li className="nav-item" style={{marginLeft:10,listStyleType:"none"}}>
+						<Link to="/esitys">Esitys</Link>
+					</li>
+					<li className="nav-item" style={{marginLeft:10,listStyleType:"none"}}>
 						<Link to="/">Main</Link>
 					</li>
 					<li className="nav-item" style={{marginLeft:10,listStyleType:"none"}}>

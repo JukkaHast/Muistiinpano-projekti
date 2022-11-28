@@ -16,42 +16,6 @@ const ShowNotes = (props) => {
         notelist:[]
     });
     
-    const tagChoice = (e) => {
-        console.log(e.target.value);
-        setTagValue({
-            tagid:e.target.value});
-        /*let newlist = props.tagnoteidlist.map((tag) => {
-            if(parseInt(tag.tagId) === parseInt(e.target.value) && Number.isInteger(tag.noteId)){
-                return tag.noteId;
-            } else {
-                return 0;
-            }
-        })
-        let newlistfiltered = newlist.filter(filternoteid)
-        //console.log(newlistfiltered);
-        setNoteidList({            
-            noteidlist: newlistfiltered
-        })
-        let newnotelist = [];
-        if(newlistfiltered.length > 1){
-            for(const ids of newlistfiltered){               
-                const result = props.list.find(({ id }) => id === ids);
-                newnotelist = newnotelist.concat(result);
-                setNoteList({                
-                    notelist: newnotelist
-                })
-                console.log("te", result, ids);
-                //console.log("ss", fornotes);
-            }
-        } else {
-            const result = props.list.find(({ id }) => id === newlistfiltered[0]);
-            newnotelist = newnotelist.concat(result);
-            setNoteList({                
-                notelist: newnotelist
-            })
-        }*/
-    };
-    
     const [state,setState] = useState({		
 		removeIndex:-1,
 		editIndex:-1
@@ -89,6 +53,44 @@ const ShowNotes = (props) => {
 		changeMode("cancel");
 	}	
 
+    const tagChoice = (e) => {
+        console.log(e.target.value);
+        setTagValue({
+            tagid:e.target.value});
+        /*let newlist = props.tagnoteidlist.map((tag) => {
+            if(parseInt(tag.tagId) === parseInt(e.target.value) && Number.isInteger(tag.noteId)){
+                return tag.noteId;
+            } else {
+                return 0;
+            }
+        })
+        let newlistfiltered = newlist.filter(filternoteid)
+        //console.log(newlistfiltered);
+        setNoteidList({            
+            noteidlist: newlistfiltered
+        })
+        let newnotelist = [];
+        if(newlistfiltered.length > 1){
+            for(const ids of newlistfiltered){               
+                const result = props.list.find(({ id }) => id === ids);
+                newnotelist = newnotelist.concat(result);
+                setNoteList({                
+                    notelist: newnotelist
+                })
+                console.log("te", result, ids);
+                //console.log("ss", fornotes);
+            }
+        } else {
+            const result = props.list.find(({ id }) => id === newlistfiltered[0]);
+            newnotelist = newnotelist.concat(result);
+            setNoteList({                
+                notelist: newnotelist
+            })
+        }*/
+    };
+    
+    
+
     /*useEffect(() => {
         //console.log(noteidList.noteidlist);
         let newlist = props.tagnoteidlist.map((tag) => {
@@ -124,23 +126,13 @@ const ShowNotes = (props) => {
         
         
         
-	},[props.list])*/
-
-    function filternoteid(value){
-       return value > 0;
-    }
+	},[props.list])*/    
 
     //function findalltags(item){
     //    return note === value;
     //}
 
-    let tagselect = props.taglist.map((tag) => {
-		return <option key={tag.id} value={tag.id}>{tag.tagName}</option>
-	})
-
-    let tagSel = <select  name="taglist" id="taglist" onChange={tagChoice}>
-                    {tagselect}
-                </select>
+    
     /*let notes = []
     if(typeof noteList.notelist[0] !== 'undefined'){
         notes = noteList.notelist.map((note,index) => {
@@ -163,33 +155,24 @@ const ShowNotes = (props) => {
         notes = <div><h3>No notes with this tag</h3></div>
     }*/
     
-    
-    /*notes2 = props.list.map((note,index) => {
-        props.tagnoteidlist.forEach(element => {
-            //console.log("in foreach", element)
-            if (parseInt(element.tagId) === parseInt(tagValue.tagid)) {
-                console.log("goes here");
-                if(parseInt(element.noteId) === parseInt(note.id))
-                    console.log("also here")
-                    if(state.editIndex === index) {
-                        return <EditRow key={note.id} note={note} editItem={editItem} changeMode={changeMode}></EditRow>
-                    }
-                    if(state.removeIndex === index){
-                        return <RemoveRow key={note.id} note={note} changeMode={changeMode} removeItem={removeItem}></RemoveRow>
-                    }
-                    console.log("reaches here", note);
-                    return <Row key={note.id} note={note} index={index} changeMode={changeMode}></Row>
-                    
-            }
-        });
-    })*/
+    // Dropdown valikko tageille
+    let tagselect = props.taglist.map((tag) => {
+		return <option key={tag.id} value={tag.id}>{tag.tagName}</option>
+	})
+
+    let tagSel = <select  name="taglist" id="taglist" onChange={tagChoice}>
+                    {tagselect}
+                </select>
+
     let notes2 = []
+    let pushed = []
     props.list.map((note,index) => {
         let check = false
         props.tagnoteidlist.map((element) => {            
             if (parseInt(element.tagId) === parseInt(tagValue.tagid)) {               
                 if(parseInt(element.noteId) === parseInt(note.id)){                    
                     check = true
+                    return;
                 }
             }
         });        
@@ -199,11 +182,13 @@ const ShowNotes = (props) => {
             })
             let tagnamesfornote = []
             tagsfornote.forEach(element => {
-                let pushed = props.taglist.filter(function (e) {
+                pushed = props.taglist.filter(function (e) {
                     return e.id === element.tagId
                 })
                 console.log("pushed", pushed)
-                tagnamesfornote.push(pushed[0].tagName)
+                if(pushed.length > 0){
+                    tagnamesfornote.push(pushed[0].tagName)
+                }                
             });
             let tagstring = tagnamesfornote.join(", ")
             if(state.editIndex === index) {
@@ -214,9 +199,6 @@ const ShowNotes = (props) => {
                 notes2.push(<RemoveRow key={note.id} note={note} changeMode={changeMode} removeItem={removeItem}></RemoveRow>)
                 return; 
             }
-            
-            console.log("tagstring", tagstring)
-            console.log("test", tagnamesfornote)
             notes2.push(<Row key={note.id} tagstring={tagstring} note={note} index={index} changeMode={changeMode}></Row>)
             return; 
         }

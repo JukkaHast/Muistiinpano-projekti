@@ -4,9 +4,6 @@ const {sequelize} = require("./db");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const userModel = require("./models/User");
-const tagModel = require("./models/Tag");
-const noteModel = require("./models/Note");
-const noteTagModel = require("./models/NoteTag");
 const sessionModel = require("./models/Session");
 
 
@@ -76,7 +73,7 @@ isUserLogged = (req,res,next) => {
 	})
 }
 
-app.post("/addtag", async function(req,res) {
+/*app.post("/addtag", async function(req,res) {
 	if(!req.body){
 		return res.status(400).json({message:"Bad request"});
 	}
@@ -102,7 +99,7 @@ app.post("/addtag", async function(req,res) {
 		console.log("Failed to create item. Reason",error);
 		return res.status(500).json({message:"Internal server error"});
     }	
-})
+})*/
 
 app.post("/register", function(req,res) {
 	if(!req.body) {

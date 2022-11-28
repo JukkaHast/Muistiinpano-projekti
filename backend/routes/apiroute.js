@@ -6,26 +6,23 @@ const { getTags, deleteTag, addTag } = require("../modules/TagModule");
 
 const router = express.Router();
 
+// express router get,post,delete,put
+// itse toiminnot omissa moduuleissaan
 
 // Muistiinpano
-router.get("/note",function(req,res) {
-	//let query = {"userid":req.user}	
+router.get("/note",function(req,res) {	
 	getNotes(req,res);	
 });
-router.get("/notetags",function(req,res) {
-	//let query = {"userid":req.user}	
+router.get("/notetags",function(req,res) {	
 	getTagNoteIds(req,res);	
 });
 
 router.post("/note",function(req,res) {
-	addNote(req,res);
-	//console.log(req.body);
+	addNote(req,res);	
 })
-
 router.delete("/note/:id",function(req,res) {	
 	deleteNote(req,res);
 })
-
 router.put("/note/:id",function(req,res) {
 	editNote(req,res);
 	/*if(!req.body){
@@ -52,18 +49,16 @@ router.put("/note/:id",function(req,res) {
 		}	
 	  })();*/	  
 })
+
 // Tagit
 router.get("/tag",function(req,res) {	
 	getTags(req,res);	
 });
-
 router.delete("/tag/:id",function(req,res) {	
 	deleteTag(req,res);
 })
-
 router.post("/tag",function(req,res) {
-	addTag(req,res);
-	//console.log(req.body);
+	addTag(req,res);	
 })
 // 
 

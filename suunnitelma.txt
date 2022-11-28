@@ -22,3 +22,5 @@ ohjelman etusivulla näkymä olisi, navigointi ylhäällä, sivupalkki jossa lis
 react komponentit: 	notesComponent: näytä teksti, ajat ja tagit, lisää, muuta, poista (/note)
 					tagsComponent: näytä lista tageista, lisäys poisto,
 npm install express sequelize
+
+// https://dev.to/tywenk/how-to-use-nested-routes-in-react-router-6-4jhd

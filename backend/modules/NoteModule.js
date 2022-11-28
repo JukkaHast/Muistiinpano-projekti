@@ -2,6 +2,8 @@ const {sequelize} = require("../db");
 const noteModel = require("../models/Note");
 const noteTagModel = require("../models/NoteTag");
 
+// Muistiinpanotietojen lisäys,poista,muuta ja hakutoiminnot
+
 async function getNotes(req,res){
 	noteModel.findAll({where: {userId:req.session.userid}}).then(notes => {
 		return res.status(200).json(notes);
@@ -66,32 +68,7 @@ async function addNote(req,res) {
 			await transaction.rollback();
 		 }
 		return res.status(500).json({message:"Internal server error"});
-    }
-	/*try {
-        const noteResult = await sequelize.transaction(async function (t) {
-            // chain all your queries here. make sure you return them.
-			//await userModel.sync({transaction});
-            const note = await noteModel.create({
-				otsikko: req.body.notetitle,
-                text: req.body.notetext,
-				userId: req.session.userid,			
-            }, { transaction: t });			     
-            req.body.taglist.forEach(async function(element){
-				const notetag = await noteTagModel.create({
-					noteId: note.id,
-					tagId: element
-				}, {transaction: t});
-				return notetag;
-			});			
-            return note;
-        });
-		
-        console.log('success');
-		return res.status(201).json({message:"Created"});
-    } catch (error) {
-		console.log("Failed to create item. Reason",error);
-		return res.status(500).json({message:"Internal server error"});
-    }*/
+    }	
 }
 async function editNote(req,res){
 	if(!req.body){

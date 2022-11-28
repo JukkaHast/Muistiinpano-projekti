@@ -1,15 +1,12 @@
 import {useState,useEffect} from 'react';
 import './App.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
-import ShoppingForm from './components/ShoppingForm';
-import ShoppingList from './components/TagList';
 import Navbar from './components/Navbar';
-import Test from './components/Test';
 import LoginPage from './components/LoginPage';
 import AddNoteForm from './components/AddNoteForm';
-import Tags from './components/Tags';
 import ShowNotes from './components/ShowNotes';
 import TagList from './components/TagList';
+import Esitys from './components/Esitys';
 
 
 function App() {
@@ -406,10 +403,11 @@ function App() {
 						<Route path="/" element={<div><ShowNotes list={state.list} taglist={state.taglist} tagnoteidlist={state.tagnoteidlist} removeNote={removeNote} editNote={editNote} ></ShowNotes></div>}></Route>
 						<Route path="/addnote/" element={<AddNoteForm getTagNoteIds={getTagNoteIds} getNotes={getNotes} addNote={addNote} taglist={state.taglist}></AddNoteForm>}></Route>
 						<Route path="/tags/" element={<TagList removeTag={removeTag} addTag={addTag} list={state.taglist}></TagList>}></Route>
-            			<Route path="*" element={<Navigate to="/"/>}/>				
+            			<Route path="*" element={<Navigate to="/"/>}/>
+						<Route path="/esitys" element={<Esitys></Esitys>}></Route>		
 					</Routes>
   }
-  // https://dev.to/tywenk/how-to-use-nested-routes-in-react-router-6-4jhd
+  
   return (    
     <div className="App">
 		<Navbar isLogged={state.isLogged} logout={logout}/>	
@@ -422,4 +420,3 @@ function App() {
 }
 
 export default App;
-// <Navbar isLogged={state.isLogged} logout={logout}/>

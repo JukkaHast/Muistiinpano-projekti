@@ -1,6 +1,8 @@
 const {sequelize} = require("../db");
 const tagModel = require("../models/Tag");
 
+// Tagien haku, lisäys ja poistotoiminnot
+
 async function getTags(req,res){
 	tagModel.findAll().then(tags => {
 		return res.status(200).json(tags);
