@@ -20,7 +20,7 @@ const ShowNotes = (props) => {
         console.log(e.target.value);
         setTagValue({
             tagid:e.target.value});
-        let newlist = props.tagnoteidlist.map((tag) => {
+        /*let newlist = props.tagnoteidlist.map((tag) => {
             if(parseInt(tag.tagId) === parseInt(e.target.value) && Number.isInteger(tag.noteId)){
                 return tag.noteId;
             } else {
@@ -49,7 +49,7 @@ const ShowNotes = (props) => {
             setNoteList({                
                 notelist: newnotelist
             })
-        }
+        }*/
     };
     
     const [state,setState] = useState({		
@@ -89,7 +89,7 @@ const ShowNotes = (props) => {
 		changeMode("cancel");
 	}	
 
-    useEffect(() => {
+    /*useEffect(() => {
         //console.log(noteidList.noteidlist);
         let newlist = props.tagnoteidlist.map((tag) => {
             if(parseInt(tag.tagId) === parseInt(tagValue.tagid) && Number.isInteger(tag.noteId)){
@@ -124,7 +124,7 @@ const ShowNotes = (props) => {
         
         
         
-	},[props.list])
+	},[props.list])*/
 
     function filternoteid(value){
        return value > 0;
@@ -141,7 +141,7 @@ const ShowNotes = (props) => {
     let tagSel = <select  name="taglist" id="taglist" onChange={tagChoice}>
                     {tagselect}
                 </select>
-    let notes = []
+    /*let notes = []
     if(typeof noteList.notelist[0] !== 'undefined'){
         notes = noteList.notelist.map((note,index) => {
             if(typeof note === 'undefined'){
@@ -157,21 +157,60 @@ const ShowNotes = (props) => {
             /*return <div key={note.id}>
                 <h3>{note.otsikko}</h3>
                 <p>{note.text}</p>
-            </div>*/
+            </div>
         })
     } else {
         notes = <div><h3>No notes with this tag</h3></div>
+    }*/
+    
+    
+    /*notes2 = props.list.map((note,index) => {
+        props.tagnoteidlist.forEach(element => {
+            //console.log("in foreach", element)
+            if (parseInt(element.tagId) === parseInt(tagValue.tagid)) {
+                console.log("goes here");
+                if(parseInt(element.noteId) === parseInt(note.id))
+                    console.log("also here")
+                    if(state.editIndex === index) {
+                        return <EditRow key={note.id} note={note} editItem={editItem} changeMode={changeMode}></EditRow>
+                    }
+                    if(state.removeIndex === index){
+                        return <RemoveRow key={note.id} note={note} changeMode={changeMode} removeItem={removeItem}></RemoveRow>
+                    }
+                    console.log("reaches here", note);
+                    return <Row key={note.id} note={note} index={index} changeMode={changeMode}></Row>
+                    
+            }
+        });
+    })*/
+    let notes2 = []
+    props.list.map((note,index) => {
+        let check = false
+        props.tagnoteidlist.map((element) => {            
+            if (parseInt(element.tagId) === parseInt(tagValue.tagid)) {               
+                if(parseInt(element.noteId) === parseInt(note.id)){                    
+                    check = true
+                }
+            }
+        });        
+        if(check){
+            if(state.editIndex === index) {
+                notes2.push(<EditRow key={note.id} note={note} editItem={editItem} changeMode={changeMode}></EditRow>)
+                return;
+            }
+            if(state.removeIndex === index){
+                notes2.push(<RemoveRow key={note.id} note={note} changeMode={changeMode} removeItem={removeItem}></RemoveRow>)
+                return; 
+            }           
+            notes2.push(<Row key={note.id} note={note} index={index} changeMode={changeMode}></Row>)
+            return; 
+        }
+    })
+    if(notes2.length === 0){
+        notes2.push(<p key="empty">No notes with this tag</p>)
     }
-   
-    /* let items = props.list.map((item,index) => {
-		if(state.editIndex === index) {
-			return <EditRow key={item.id} item={item} editItem={editItem} changeMode={changeMode}/>
-		}		
-		if(state.removeIndex === index) {
-			return <RemoveRow key={item.id} item={item} changeMode={changeMode} removeItem={removeItem}/>
-		}
-		return <Row key={item.id} item={item} index={index} changeMode={changeMode}/>
-	})*/
+    //console.log("this",notes2);
+    
     
     
     //
@@ -180,7 +219,9 @@ const ShowNotes = (props) => {
 
             
             {tagSel}
-            {notes}
+            
+
+            {notes2}
         </div>
     )
 }
