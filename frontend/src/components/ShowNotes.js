@@ -210,12 +210,8 @@ const ShowNotes = (props) => {
         notes2.push(<p key="empty">No notes with this tag</p>)
     }    
     return (
-        <div>
-
-            
+        <div>            
             {tagSel}
-            
-
             {notes2}
         </div>
     )
