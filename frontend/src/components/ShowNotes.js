@@ -208,12 +208,7 @@ const ShowNotes = (props) => {
     })
     if(notes2.length === 0){
         notes2.push(<p key="empty">No notes with this tag</p>)
-    }
-    //console.log("this",notes2);
-    
-    
-    
-    //
+    }    
     return (
         <div>
 
