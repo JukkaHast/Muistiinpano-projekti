@@ -130,9 +130,9 @@ const ShowNotes = (props) => {
        return value > 0;
     }
 
-    function findnote(note, value){
-        return note.id === value;
-    }
+    //function findalltags(item){
+    //    return note === value;
+    //}
 
     let tagselect = props.taglist.map((tag) => {
 		return <option key={tag.id} value={tag.id}>{tag.tagName}</option>
@@ -194,6 +194,18 @@ const ShowNotes = (props) => {
             }
         });        
         if(check){
+            let tagsfornote = props.tagnoteidlist.filter(function (e) {
+                return e.noteId === note.id;
+            })
+            let tagnamesfornote = []
+            tagsfornote.forEach(element => {
+                let pushed = props.taglist.filter(function (e) {
+                    return e.id === element.tagId
+                })
+                console.log("pushed", pushed)
+                tagnamesfornote.push(pushed[0].tagName)
+            });
+            let tagstring = tagnamesfornote.join(", ")
             if(state.editIndex === index) {
                 notes2.push(<EditRow key={note.id} note={note} editItem={editItem} changeMode={changeMode}></EditRow>)
                 return;
@@ -201,8 +213,11 @@ const ShowNotes = (props) => {
             if(state.removeIndex === index){
                 notes2.push(<RemoveRow key={note.id} note={note} changeMode={changeMode} removeItem={removeItem}></RemoveRow>)
                 return; 
-            }           
-            notes2.push(<Row key={note.id} note={note} index={index} changeMode={changeMode}></Row>)
+            }
+            
+            console.log("tagstring", tagstring)
+            console.log("test", tagnamesfornote)
+            notes2.push(<Row key={note.id} tagstring={tagstring} note={note} index={index} changeMode={changeMode}></Row>)
             return; 
         }
     })

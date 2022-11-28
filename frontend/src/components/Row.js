@@ -4,6 +4,7 @@ const Row = (props) => {
 		<div>
 			<p>{props.note.otsikko}</p>
 			<p>{props.note.text}</p>
+			<p>Tags: {props.tagstring}</p>
 			<button className="btn btn-danger"
 				onClick={ () => props.changeMode("remove", props.index)}>Remove</button>
 			<button className="btn btn-secondary"
